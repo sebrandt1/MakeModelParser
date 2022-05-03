@@ -11,21 +11,16 @@ namespace MakeModelParser.AutoScout.Api
 {
     public class ModelFetcher
     {
-
-        public async Task MapAllModelsToMake(MakeDto makeDto)
+        public async Task<List<ModelDto>> GetModelsByMakeId(int id)
         {
             var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync($"https://www.autoscout24.se/as24-home/api/taxonomy/cars/makes/{makeDto.Id}/models");
+            var response = await httpClient.GetAsync($"https://www.autoscout24.se/as24-home/api/taxonomy/cars/makes/{id}/models");
             var data = await response.Content.ReadAsStringAsync();
 
             var json = JsonConvert.DeserializeObject<ModelResponse>(data);
             var models = json.Models.Model.Values;
 
-            makeDto.Models = new List<ModelDto>();
-            foreach(var model in models)
-            {
-                makeDto.Models.Add(model);
-            }
+            return models;
         }
 
 

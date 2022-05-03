@@ -3,14 +3,10 @@ using MakeModelParser.Conversion;
 using MakeModelParser.Database;
 
 var makeDtos = await new MakeFetcher().GetAllMakes();
-var modelFetcher = new ModelFetcher();
-
-foreach(var make in makeDtos)
-{
-    await modelFetcher.MapAllModelsToMake(make);
-}
 
 var makes = Converter.MakesFromDtoList(makeDtos);
+Console.WriteLine(makes.Count);
+Console.WriteLine(makes.Sum(x => x.Models.Count));
 
 using(var dbContext = new DatabaseContext())
 {

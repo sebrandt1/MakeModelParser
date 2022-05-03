@@ -12,6 +12,12 @@ namespace MakeModelParser.AutoScout.Api
 {
     public class MakeFetcher
     {
+        private readonly ModelFetcher modelFetcher;
+
+        public MakeFetcher()
+        {
+            modelFetcher = new ModelFetcher();
+        }
         public async Task<List<MakeDto>> GetAllMakes()
         {
             var httpClient = new HttpClient();
@@ -19,7 +25,13 @@ namespace MakeModelParser.AutoScout.Api
             var data = await response.Content.ReadAsStringAsync();
 
             var json = JsonConvert.DeserializeObject<MakeResponse>(data);
-            return json?.Make.Values;
+            var makes = json.Make.Values;
+
+            foreach(var make in makes)
+            {
+                make.Models = await modelFetcher?.GetModelsByMakeId(make.Id);
+            }
+            return makes;
         }
     }
 }
