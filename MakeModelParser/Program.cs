@@ -5,8 +5,8 @@ using MakeModelParser.Database;
 var makeDtos = await new MakeFetcher().GetAllMakes();
 
 var makes = Converter.MakesFromDtoList(makeDtos);
-Console.WriteLine(makes.Count);
-Console.WriteLine(makes.Sum(x => x.Models.Count));
+Console.WriteLine($"Fetched {makes.Count} car makes.");
+Console.WriteLine($"Fetched {makes.Sum(x => x.Models.Count)} car models.");
 
 using(var dbContext = new DatabaseContext())
 {
@@ -15,6 +15,7 @@ using(var dbContext = new DatabaseContext())
         dbContext.Makes.Add(make);
     }
     await dbContext.SaveChangesAsync();
+    Console.WriteLine("Saved all makes and models");
 }
 
 Console.WriteLine("Done");
